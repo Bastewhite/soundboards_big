@@ -1,0 +1,34 @@
+package com.baste.application;
+
+import android.app.Application;
+
+import com.baste.R;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+public class MyApplication extends Application{
+
+    Tracker mTracker;
+
+    private synchronized Tracker getTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            mTracker = analytics.newTracker(R.xml.analytics);
+        }
+        return mTracker;
+    }
+
+    public void setTrackerScreenName(String screenName) {
+        // Get tracker.
+        Tracker t = getTracker();
+
+        // Set screen name.
+        // Where path is a String representing the screen name.
+        t.setScreenName(screenName);
+
+        // Send a screen view.
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+}
